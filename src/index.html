@@ -5,57 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suggestion App</title>
     <style>
-        /* CSS Styling */
+        /* Dark Theme Styling */
         body {
             font-family: Arial, sans-serif;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f0f4f8; /* Light background */
-            color: #333;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text color */
+            text-align: center; /* Center-align all text */
         }
 
         h1 {
-            color: #1e3a8a; /* Deep blue color */
+            color: #63b3ed; /* Light blue heading */
             font-size: 2em;
             margin-bottom: 10px;
         }
 
         p {
             font-size: 1.1em;
-            color: #4a5568; /* Soft dark gray */
+            color: #a0aec0; /* Soft gray sub-heading */
+            margin-bottom: 20px;
         }
 
         form {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 20px;
-            background-color: #ffffff;
+            background-color: #2d3748; /* Darker background for form */
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         textarea {
             resize: vertical;
             padding: 12px;
             font-size: 16px;
-            border: 1px solid #cbd5e0; /* Light gray border */
+            border: 1px solid #4a5568; /* Dark gray border */
             border-radius: 6px;
-            background-color: #edf2f7; /* Light blue-gray */
+            background-color: #4a5568; /* Darker gray for textarea */
+            color: #e2e8f0; /* Light text in textarea */
             outline: none;
             transition: border-color 0.3s;
         }
 
         textarea:focus {
-            border-color: #3182ce; /* Brighter blue on focus */
+            border-color: #63b3ed; /* Light blue border on focus */
         }
 
         button {
             padding: 12px;
             font-size: 16px;
-            background-color: #3182ce; /* Blue button */
+            background-color: #63b3ed; /* Blue button */
             color: white;
             border: none;
             cursor: pointer;
@@ -64,11 +66,11 @@
         }
 
         button:hover {
-            background-color: #2b6cb0; /* Darker blue on hover */
+            background-color: #4299e1; /* Darker blue on hover */
         }
 
         .success-message {
-            color: #38a169; /* Green success message */
+            color: #48bb78; /* Green for success message */
             font-weight: bold;
             margin-top: 20px;
             display: none;
