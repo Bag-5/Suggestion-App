@@ -12,6 +12,7 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
+            background-color: #f4f4f4;
         }
 
         h1 {
@@ -22,12 +23,15 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-top: 20px;
         }
 
         textarea {
             resize: vertical;
             padding: 10px;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         button {
@@ -37,10 +41,17 @@
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
             background-color: #0056b3;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -52,23 +63,31 @@
         <textarea name="suggestion" id="suggestion" rows="4" placeholder="Enter your suggestion here..."></textarea>
         <button type="submit">Submit</button>
     </form>
+    
+    <div id="successMessage" class="success-message" style="display: none;">Suggestion submitted successfully!</div>
 
     <script>
         // JavaScript for handling form submission
         document.getElementById('suggestionForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const suggestion = document.getElementById('suggestion').value;
+            const suggestion = document.getElementById('suggestion').value.trim();
             
-            if (suggestion.trim() === "") {
+            if (suggestion === "") {
                 alert("Please enter a suggestion.");
                 return;
             }
 
-            alert("Suggestion submitted successfully!");
+            // Display success message
+            document.getElementById('successMessage').style.display = 'block';
 
             // Clear the text area after submission
             document.getElementById('suggestion').value = "";
+
+            // Hide the success message after 3 seconds
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
         });
     </script>
 </body>
