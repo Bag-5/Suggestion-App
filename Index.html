@@ -6,8 +6,8 @@
     <title>Suggestion App</title>
     <style>
         body {
-            background-color: #1e1e1e;
-            color: #fff;
+            background-color: #222;
+            color: #f0f0f0;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -15,6 +15,7 @@
         }
         h1, h2 {
             text-align: center;
+            color: #fff;
             margin: 20px;
         }
         .form-container {
@@ -23,18 +24,21 @@
             border-radius: 8px;
             width: 300px;
             margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
         input[type="text"], select, textarea {
             width: 100%;
             padding: 8px;
             margin-top: 8px;
             border-radius: 4px;
-            border: none;
+            border: 1px solid #555;
+            background-color: #444;
+            color: #fff;
         }
         button {
             width: 100%;
             padding: 10px;
-            background-color: #4CAF50;
+            background-color: #007acc;
             border: none;
             color: white;
             font-weight: bold;
@@ -43,23 +47,26 @@
             cursor: pointer;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #005fa3;
         }
         #adminSection {
             display: none;
-            background-color: #444;
+            background-color: #333;
             padding: 20px;
             margin-top: 20px;
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
         .suggestions {
             margin-top: 10px;
         }
         .suggestion-item {
-            background-color: #555;
+            background-color: #444;
             padding: 10px;
             margin-top: 5px;
             border-radius: 5px;
+            border: 1px solid #555;
+            color: #ddd;
         }
     </style>
 </head>
@@ -106,33 +113,27 @@
             suggestions.push(suggestion);
             alert("Suggestion submitted!");
 
-            document.getElementById("suggestion").value = "";  // Clear input
+            document.getElementById("suggestion").value = "";
         }
 
         function adminLogin() {
             const password = prompt("Enter admin password:");
-            if (password === "admin123") {  // Simple password check
+            if (password === "admin") {
                 document.getElementById("adminSection").style.display = "block";
-                displaySuggestions();
+                loadSuggestions();
             } else {
                 alert("Incorrect password!");
             }
         }
 
-        function displaySuggestions() {
+        function loadSuggestions() {
             const container = document.getElementById("suggestionsContainer");
             container.innerHTML = "";
-
-            if (suggestions.length === 0) {
-                container.innerHTML = "<p>No suggestions yet.</p>";
-                return;
-            }
-
             suggestions.forEach((suggestion, index) => {
                 const suggestionItem = document.createElement("div");
                 suggestionItem.classList.add("suggestion-item");
                 suggestionItem.innerHTML = `<strong>Category:</strong> ${suggestion.category}<br>
-                                            <strong>Suggestion:</strong> ${suggestion.text}`;
+                                             <strong>Suggestion:</strong> ${suggestion.text}`;
                 container.appendChild(suggestionItem);
             });
         }
