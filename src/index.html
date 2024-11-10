@@ -7,6 +7,89 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Welcome to the Suggestion App</h1>
+    <h1>Suggestion App</h1>
+    <p>Submit your suggestion anonymously below:</p>
+    
+    <form id="suggestionForm">
+        <textarea name="suggestion" id="suggestion" rows="4" placeholder="Enter your suggestion here..."></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script src="js/app.js"></script>
 </body>
 </html>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+textarea {
+    resize: vertical;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+document.getElementById('suggestionForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const suggestion = document.getElementById('suggestion').value;
+    
+    if (suggestion.trim() === "") {
+        alert("Please enter a suggestion.");
+        return;
+    }
+
+    alert("Suggestion submitted successfully!");
+
+    // Clear the text area after submission
+    document.getElementById('suggestion').value = "";
+});
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Route to handle suggestion submissions
+app.post('/submit-suggestion', (req, res) => {
+    const { suggestion } = req.body;
+
+    if (!suggestion) {
+        return res.status(400).json({ error: 'Suggestion is required' });
+    }
+
+    // Here you would typically save the suggestion to a database
+    console.log('Suggestion received:', suggestion);
+
+    res.status(200).json({ message: 'Suggestion submitted successfully!' });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
