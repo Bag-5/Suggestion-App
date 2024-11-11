@@ -118,6 +118,18 @@
                     suggestionDiv.classList.add('suggestion');
                     suggestionDiv.innerHTML = `<strong>From:</strong> ${sugg.name}<br><strong>Suggestion:</strong> ${sugg.suggestion}`;
                     suggestionsList.appendChild(suggestionDiv);
+            let isAdmin = true; // Change to 'false' to see the user view.
+    function displaySuggestion(name, text) {
+    const suggestionList = document.getElementById("suggestionList");
+    const suggestionItem = document.createElement("li");
+    if (isAdmin) {
+        suggestionItem.innerHTML = `<strong>${name}</strong>: ${text}`;
+    } else {
+        suggestionItem.innerHTML = `${text}`;
+    }
+    suggestionList.appendChild(suggestionItem);
+}
+  
                 });
             }
             suggestionsContainer.style.display = 'block';
