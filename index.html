@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suggestion App</title>
     <style>
+        /* Basic Styles */
         body {
             background-color: #1a1a1a;
             color: #e0e0e0;
@@ -18,7 +19,7 @@
             color: #ffffff;
             margin: 20px;
         }
-        .form-container {
+        .form-container, .password-container {
             background-color: #333333;
             padding: 20px;
             border-radius: 8px;
@@ -26,7 +27,7 @@
             margin-top: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        input[type="text"], textarea {
+        input[type="text"], textarea, input[type="password"] {
             width: 100%;
             padding: 8px;
             margin-top: 8px;
@@ -71,7 +72,7 @@
         <button onclick="submitSuggestion()">Submit Suggestion</button>
     </div>
 
-    <button onclick="showAdminView()">Admin Login (View Suggestions)</button>
+    <button onclick="showPasswordPrompt()">Admin Login (View Suggestions)</button>
 
     <div id="suggestions-container">
         <h2>All Suggestions</h2>
@@ -80,6 +81,7 @@
 
     <script>
         const suggestions = [];
+        const adminPassword = "admin123"; // Set your admin password here
 
         function submitSuggestion() {
             const name = document.getElementById('name').value;
@@ -91,6 +93,15 @@
                 alert('Thank you! Your suggestion has been submitted.');
             } else {
                 alert('Please enter both your name and suggestion.');
+            }
+        }
+
+        function showPasswordPrompt() {
+            const password = prompt("Enter Admin Password:");
+            if (password === adminPassword) {
+                showAdminView();
+            } else {
+                alert("Incorrect password. Access denied.");
             }
         }
 
