@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suggestion App</title>
     <style>
-        /* Basic Styles */
         body {
             background-color: #1a1a1a;
             color: #e0e0e0;
@@ -19,7 +18,7 @@
             color: #ffffff;
             margin: 20px;
         }
-        .form-container, .password-container {
+        .form-container {
             background-color: #333333;
             padding: 20px;
             border-radius: 8px;
@@ -27,7 +26,7 @@
             margin-top: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        input[type="text"], textarea, input[type="password"] {
+        input[type="text"], textarea {
             width: 100%;
             padding: 8px;
             margin-top: 8px;
@@ -67,7 +66,7 @@
     <h1>Anonymous Suggestion App</h1>
     <h2>Submit your suggestion below:</h2>
     <div class="form-container">
-        <input type="text" id="name" placeholder="Your Name (Visible to Admin Only)" required>
+        <input type="text" id="name" placeholder="Your Name" required>
         <textarea id="suggestion" placeholder="Your Suggestion" rows="4" required></textarea>
         <button onclick="submitSuggestion()">Submit Suggestion</button>
     </div>
@@ -76,12 +75,13 @@
 
     <div id="suggestions-container">
         <h2>All Suggestions</h2>
-        <div id="suggestions-list"></div>
+        <ul id="suggestionList"></ul>
     </div>
 
     <script>
         const suggestions = [];
-        const adminPassword = "admin123"; // Set your admin password here
+        const adminPassword = "admin123"; // Admin password
+        let isAdmin = false; // Variable to track if the user is an admin
 
         function submitSuggestion() {
             const name = document.getElementById('name').value;
@@ -99,6 +99,7 @@
         function showPasswordPrompt() {
             const password = prompt("Enter Admin Password:");
             if (password === adminPassword) {
+                isAdmin = true;
                 showAdminView();
             } else {
                 alert("Incorrect password. Access denied.");
@@ -107,29 +108,17 @@
 
         function showAdminView() {
             const suggestionsContainer = document.getElementById('suggestions-container');
-            const suggestionsList = document.getElementById('suggestions-list');
-            suggestionsList.innerHTML = '';
+            const suggestionList = document.getElementById('suggestionList');
+            suggestionList.innerHTML = '';
 
             if (suggestions.length === 0) {
-                suggestionsList.innerHTML = '<p>No suggestions yet.</p>';
+                suggestionList.innerHTML = '<p>No suggestions yet.</p>';
             } else {
-                suggestions.forEach((sugg, index) => {
-                    const suggestionDiv = document.createElement('div');
-                    suggestionDiv.classList.add('suggestion');
-                    suggestionDiv.innerHTML = `<strong>From:</strong> ${sugg.name}<br><strong>Suggestion:</strong> ${sugg.suggestion}`;
-                    suggestionsList.appendChild(suggestionDiv);
-            let isAdmin = true; // Change to 'false' to see the user view.
-    function displaySuggestion(name, text) {
-    const suggestionList = document.getElementById("suggestionList");
-    const suggestionItem = document.createElement("li");
-    if (isAdmin) {
-        suggestionItem.innerHTML = `<strong>${name}</strong>: ${text}`;
-    } else {
-        suggestionItem.innerHTML = `${text}`;
-    }
-    suggestionList.appendChild(suggestionItem);
-}
-  
+                suggestions.forEach((sugg) => {
+                    const suggestionItem = document.createElement('li');
+                    suggestionItem.innerHTML = isAdmin ? `${sugg.name}: ${sugg.suggestion}` : `${sugg.suggestion}`;
+                    suggestionItem.classList.add('suggestion');
+                    suggestionList.appendChild(suggestionItem);
                 });
             }
             suggestionsContainer.style.display = 'block';
