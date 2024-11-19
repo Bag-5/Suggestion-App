@@ -44,7 +44,7 @@
             display: block;
         }
 
-        .form-container {
+        .form-container, .card {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
@@ -79,6 +79,10 @@
         button:hover {
             background-color: #218838;
         }
+
+        .card {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +112,40 @@
         <div id="suggestionForm" class="form-container" style="display: none;">
             <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
             <button onclick="submitSuggestion()">Submit Suggestion</button>
+        </div>
+    </div>
+
+    <!-- Events Page -->
+    <div id="events" class="page">
+        <h1>Upcoming Events</h1>
+        <div class="card">Event 1: Orientation Day - 10th Jan</div>
+        <div class="card">Event 2: Tech Summit - 15th Feb</div>
+        <div class="card">Event 3: Sports Week - 1st March</div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <h1>Contact Us</h1>
+        <p>Email: campusadmin@example.com</p>
+        <p>Phone: +233 123 456 789</p>
+        <p>Address: Accra Technical University</p>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin" class="page">
+        <h1>Admin Dashboard</h1>
+        <p>Secure access required for this section.</p>
+        <button onclick="showAdmin()">Login as Admin</button>
+
+        <div id="adminView" style="display: none;">
+            <h2>User Details</h2>
+            <div id="userDetails">
+                <p>No users logged in yet.</p>
+            </div>
+            <h2>Suggestions</h2>
+            <div id="adminSuggestions">
+                <p>No suggestions yet.</p>
+            </div>
         </div>
     </div>
 
@@ -146,6 +184,48 @@
                 document.getElementById('suggestion').value = ''; // Clear the input field
             } else {
                 alert('Please write a suggestion.');
+            }
+        }
+
+        // Admin View
+        function showAdmin() {
+            const password = prompt("Enter admin password:");
+            if (password === "admin123") {
+                document.getElementById('adminView').style.display = 'block';
+                displayUsers();
+                displaySuggestions();
+            } else {
+                alert("Access denied.");
+            }
+        }
+
+        function displayUsers() {
+            const userDetails = document.getElementById('userDetails');
+            userDetails.innerHTML = '';
+            if (users.length === 0) {
+                userDetails.innerHTML = '<p>No users logged in yet.</p>';
+            } else {
+                users.forEach(user => {
+                    const userInfo = document.createElement('div');
+                    userInfo.classList.add('card');
+                    userInfo.innerHTML = `<strong>Index:</strong> ${user.indexNumber}<br><strong>Email:</strong> ${user.email}`;
+                    userDetails.appendChild(userInfo);
+                });
+            }
+        }
+
+        function displaySuggestions() {
+            const adminSuggestions = document.getElementById('adminSuggestions');
+            adminSuggestions.innerHTML = '';
+            if (suggestions.length === 0) {
+                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
+            } else {
+                suggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('card');
+                    suggestionItem.textContent = suggestion;
+                    adminSuggestions.appendChild(suggestionItem);
+                });
             }
         }
     </script>
