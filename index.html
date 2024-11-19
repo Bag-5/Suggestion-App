@@ -79,14 +79,6 @@
         button:hover {
             background-color: #218838;
         }
-
-        .suggestion, .user-info {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
     </style>
 </head>
 <body>
@@ -104,41 +96,24 @@
         <h1>Welcome to the Suggestion App</h1>
         <p>Please log in to share your suggestions.</p>
 
-        <div class="form-container">
+        <!-- Login Form -->
+        <div id="loginForm" class="form-container">
             <input type="text" id="indexNumber" placeholder="Index Number" required>
             <input type="email" id="email" placeholder="Email" required>
             <input type="password" id="password" placeholder="Password" required>
             <button onclick="login()">Login</button>
         </div>
 
+        <!-- Suggestion Form -->
         <div id="suggestionForm" class="form-container" style="display: none;">
             <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
             <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
     </div>
 
-    <!-- Admin Dashboard -->
-    <div id="admin" class="page">
-        <h1>Admin Dashboard</h1>
-        <p>Secure access required for this section.</p>
-        <button onclick="showAdmin()">Login as Admin</button>
-
-        <div id="adminView" style="display: none;">
-            <h2>User Details</h2>
-            <div id="userDetails">
-                <p>No users logged in yet.</p>
-            </div>
-            <h2>Suggestions</h2>
-            <div id="adminSuggestions">
-                <p>No suggestions yet.</p>
-            </div>
-        </div>
-    </div>
-
     <script>
-        const users = []; // Store user data
-        const suggestions = []; // Store suggestions
-        const adminPassword = "admin123"; // Admin password
+        const users = [];
+        const suggestions = [];
 
         // Switch between pages
         function showPage(pageId) {
@@ -146,6 +121,7 @@
             document.getElementById(pageId).classList.add('active');
         }
 
+        // Login Function
         function login() {
             const indexNumber = document.getElementById('indexNumber').value;
             const email = document.getElementById('email').value;
@@ -154,61 +130,22 @@
             if (indexNumber && email && password) {
                 users.push({ indexNumber, email });
                 alert(`Welcome, ${indexNumber}!`);
-                document.getElementById('suggestionForm').style.display = 'block';
+                document.getElementById('loginForm').style.display = 'none'; // Hide login form
+                document.getElementById('suggestionForm').style.display = 'block'; // Show suggestion form
             } else {
                 alert('Please fill in all fields.');
             }
         }
 
+        // Submit Suggestion
         function submitSuggestion() {
             const suggestionText = document.getElementById('suggestion').value;
             if (suggestionText) {
                 suggestions.push(suggestionText);
                 alert('Thank you for your suggestion!');
-                document.getElementById('suggestion').value = '';
+                document.getElementById('suggestion').value = ''; // Clear the input field
             } else {
                 alert('Please write a suggestion.');
-            }
-        }
-
-        function showAdmin() {
-            const password = prompt("Enter admin password:");
-            if (password === adminPassword) {
-                document.getElementById('adminView').style.display = 'block';
-                displayUsers();
-                displaySuggestions();
-            } else {
-                alert("Access denied.");
-            }
-        }
-
-        function displayUsers() {
-            const userDetails = document.getElementById('userDetails');
-            userDetails.innerHTML = '';
-            if (users.length === 0) {
-                userDetails.innerHTML = '<p>No users logged in yet.</p>';
-            } else {
-                users.forEach(user => {
-                    const userInfo = document.createElement('div');
-                    userInfo.classList.add('user-info');
-                    userInfo.innerHTML = `<strong>Index:</strong> ${user.indexNumber}<br><strong>Email:</strong> ${user.email}`;
-                    userDetails.appendChild(userInfo);
-                });
-            }
-        }
-
-        function displaySuggestions() {
-            const adminSuggestions = document.getElementById('adminSuggestions');
-            adminSuggestions.innerHTML = '';
-            if (suggestions.length === 0) {
-                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
-            } else {
-                suggestions.forEach(suggestion => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('suggestion');
-                    suggestionItem.textContent = suggestion;
-                    adminSuggestions.appendChild(suggestionItem);
-                });
             }
         }
     </script>
