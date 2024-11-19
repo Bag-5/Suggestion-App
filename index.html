@@ -6,122 +6,181 @@
     <title>Suggestion App</title>
     <style>
         body {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #007bff;
+            color: white;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: space-around;
+            padding: 15px;
         }
-        h1, h2 {
-            text-align: center;
-            color: #ffffff;
-            margin: 20px;
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
         }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            padding: 20px;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* Home Page */
         .form-container {
-            background-color: #333333;
+            background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            width: 300px;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            margin: 20px auto;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 8px;
-            border-radius: 4px;
-            border: 1px solid #555;
-            background-color: #2a2a2a;
-            color: #e0e0e0;
-        }
-        button {
+        input, textarea {
             width: 100%;
             padding: 10px;
-            margin-top: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
             border-radius: 4px;
+        }
+        button {
             background-color: #007bff;
             color: white;
             border: none;
+            padding: 10px;
+            width: 100%;
             cursor: pointer;
+            border-radius: 4px;
         }
         button:hover {
             background-color: #0056b3;
         }
-        #suggestions-container {
-            display: none;
-            margin-top: 20px;
-            width: 80%;
-        }
-        .suggestion {
-            background-color: #444;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
+
     </style>
 </head>
 <body>
 
-    <h1>Anonymous Suggestion App</h1>
-    <h2>Submit your suggestion below:</h2>
-    <div class="form-container">
-        <input type="text" id="name" placeholder="Your Name" required>
-        <textarea id="suggestion" placeholder="Your Suggestion" rows="4" required></textarea>
-        <button onclick="submitSuggestion()">Submit Suggestion</button>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#" onclick="showPage('home')">Home</a>
+        <a href="#" onclick="showPage('events')">Events</a>
+        <a href="#" onclick="showPage('contact')">Contact</a>
+        <a href="#" onclick="showPage('admin')">Admin Dashboard</a>
     </div>
 
-    <button onclick="showPasswordPrompt()">Admin Login (View Suggestions)</button>
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <h1>Welcome to the Suggestion App</h1>
+        <p>Please log in to share your suggestions.</p>
 
-    <div id="suggestions-container">
-        <h2>All Suggestions</h2>
-        <ul id="suggestionList"></ul>
+        <div class="form-container">
+            <input type="text" id="username" placeholder="Username">
+            <button onclick="login()">Login</button>
+        </div>
+
+        <div id="suggestionForm" class="form-container" style="display: none;">
+            <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
+            <button onclick="submitSuggestion()">Submit Suggestion</button>
+        </div>
+    </div>
+
+    <!-- Events Page -->
+    <div id="events" class="page">
+        <h1>Upcoming Events</h1>
+        <p>Stay tuned for exciting campus events!</p>
+        <!-- Placeholder for events -->
+        <div id="eventsList">
+            <p>No events listed yet.</p>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <h1>Contact Us</h1>
+        <p>Email: campusadmin@example.com</p>
+        <p>Phone: +233 123 456 789</p>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin" class="page">
+        <h1>Admin Dashboard</h1>
+        <p>Secure access required for this section.</p>
+        <button onclick="showAdmin()">Login as Admin</button>
+
+        <div id="adminView" style="display: none;">
+            <h2>Suggestions</h2>
+            <div id="adminSuggestions">
+                <p>No suggestions yet.</p>
+            </div>
+        </div>
     </div>
 
     <script>
         const suggestions = [];
-        const adminPassword = "admin123"; // Admin password
-        let isAdmin = false; // Variable to track if the user is an admin
+
+        // Navigation Function
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Login and Suggestion Functionality
+        function login() {
+            const username = document.getElementById('username').value;
+            if (username) {
+                alert(`Welcome, ${username}!`);
+                document.getElementById('suggestionForm').style.display = 'block';
+            } else {
+                alert('Please enter your username.');
+            }
+        }
 
         function submitSuggestion() {
-            const name = document.getElementById('name').value;
             const suggestionText = document.getElementById('suggestion').value;
-            if (name && suggestionText) {
-                suggestions.push({ name, suggestion: suggestionText });
-                document.getElementById('name').value = '';
+            if (suggestionText) {
+                suggestions.push(suggestionText);
+                alert('Thank you for your suggestion!');
                 document.getElementById('suggestion').value = '';
-                alert('Thank you! Your suggestion has been submitted.');
             } else {
-                alert('Please enter both your name and suggestion.');
+                alert('Please write a suggestion.');
             }
         }
 
-        function showPasswordPrompt() {
-            const password = prompt("Enter Admin Password:");
-            if (password === adminPassword) {
-                isAdmin = true;
-                showAdminView();
+        // Admin View
+        function showAdmin() {
+            const password = prompt("Enter admin password:");
+            if (password === "admin123") {
+                document.getElementById('adminView').style.display = 'block';
+                displaySuggestions();
             } else {
-                alert("Incorrect password. Access denied.");
+                alert("Access denied.");
             }
         }
 
-        function showAdminView() {
-            const suggestionsContainer = document.getElementById('suggestions-container');
-            const suggestionList = document.getElementById('suggestionList');
-            suggestionList.innerHTML = '';
-
+        function displaySuggestions() {
+            const adminSuggestions = document.getElementById('adminSuggestions');
+            adminSuggestions.innerHTML = '';
             if (suggestions.length === 0) {
-                suggestionList.innerHTML = '<p>No suggestions yet.</p>';
+                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
             } else {
-                suggestions.forEach((sugg) => {
-                    const suggestionItem = document.createElement('li');
-                    suggestionItem.innerHTML = isAdmin ? `${sugg.name}: ${sugg.suggestion}` : `${sugg.suggestion}`;
-                    suggestionItem.classList.add('suggestion');
-                    suggestionList.appendChild(suggestionItem);
+                suggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('p');
+                    suggestionItem.textContent = suggestion;
+                    adminSuggestions.appendChild(suggestionItem);
                 });
             }
-            suggestionsContainer.style.display = 'block';
         }
     </script>
 
