@@ -9,42 +9,44 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #007bff, #6f42c1);
-            color: #f8f9fa;
+            background: linear-gradient(120deg, #f5f7fa, #c3cfe2); /* Subtle gradient */
+            color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
             overflow-x: hidden;
         }
 
-        * {
-            transition: all 0.3s ease;
-        }
-
+        /* Navigation Bar */
         .navbar {
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: #005f73; /* Deep teal for professionalism */
             color: white;
             display: flex;
             justify-content: space-around;
             padding: 15px;
             width: 100%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .navbar a {
             color: white;
             text-decoration: none;
             font-weight: bold;
+            font-size: 16px;
         }
         .navbar a:hover {
-            color: #ffc107;
+            color: #94d2bd; /* Soft mint hover effect */
             text-decoration: underline;
         }
 
+        /* Pages */
         .page {
             display: none;
             padding: 20px;
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             opacity: 0;
             transform: translateY(20px);
         }
@@ -54,11 +56,12 @@
             transform: translateY(0);
         }
 
+        /* Form Containers */
         .form-container, .card {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #ffffff; /* Clean white for forms */
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
         }
 
@@ -67,17 +70,16 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 4px;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            color: #333;
         }
-
         input::placeholder, textarea::placeholder {
-            color: #d6d6d6;
+            color: #aaa;
         }
 
         button {
-            background-color: #28a745;
+            background-color: #005f73;
             color: white;
             border: none;
             padding: 10px;
@@ -87,37 +89,32 @@
             font-weight: bold;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #0a9396;
             transform: scale(1.05);
         }
 
+        /* Cards */
         .card {
             margin-top: 10px;
             transform: translateY(0);
         }
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Footer */
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Navigation Bar -->
     <div class="navbar">
         <a href="#" onclick="showPage('home')">Home</a>
         <a href="#" onclick="showPage('events')">Events</a>
@@ -125,10 +122,12 @@
         <a href="#" onclick="showPage('admin')">Admin Dashboard</a>
     </div>
 
-    <div id="home" class="page active fade-in">
+    <!-- Home Page -->
+    <div id="home" class="page active">
         <h1>Welcome to the Suggestion App</h1>
         <p>Please log in to share your suggestions.</p>
 
+        <!-- Login Form -->
         <div id="loginForm" class="form-container">
             <input type="text" id="indexNumber" placeholder="Index Number" required>
             <input type="email" id="email" placeholder="Email" required>
@@ -136,34 +135,39 @@
             <button onclick="login()">Login</button>
         </div>
 
+        <!-- Suggestion Form -->
         <div id="suggestionForm" class="form-container" style="display: none;">
             <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
             <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
 
-        <div id="suggestionHistory" class="form-container" style="display: none;">
-            <h3>Your Suggestions:</h3>
-            <div id="historyList">
+        <!-- User Suggestion History -->
+        <div id="userSuggestions" class="form-container" style="display: none;">
+            <h2>Your Submitted Suggestions</h2>
+            <div id="userSuggestionsList">
                 <p>No suggestions yet.</p>
             </div>
         </div>
     </div>
 
-    <div id="events" class="page fade-in">
+    <!-- Events Page -->
+    <div id="events" class="page">
         <h1>Upcoming Events</h1>
         <div class="card">Event 1: Orientation Day - 10th Jan</div>
         <div class="card">Event 2: Tech Summit - 15th Feb</div>
         <div class="card">Event 3: Sports Week - 1st March</div>
     </div>
 
-    <div id="contact" class="page fade-in">
+    <!-- Contact Page -->
+    <div id="contact" class="page">
         <h1>Contact Us</h1>
         <p>Email: campusadmin@example.com</p>
         <p>Phone: +233 123 456 789</p>
         <p>Address: Accra Technical University</p>
     </div>
 
-    <div id="admin" class="page fade-in">
+    <!-- Admin Dashboard -->
+    <div id="admin" class="page">
         <h1>Admin Dashboard</h1>
         <p>Secure access required for this section.</p>
         <button onclick="showAdmin()">Login as Admin</button>
@@ -180,93 +184,87 @@
         </div>
     </div>
 
+    <footer>
+        &copy; 2024 Suggestion App. Designed with 💖 by My Honeybyte.
+    </footer>
+
     <script>
         const users = [];
-        const suggestions = {};
-        let currentUser = null;
+        const suggestions = [];
 
+        // Navigation
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
         }
 
+        // Login
         function login() {
             const indexNumber = document.getElementById('indexNumber').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             if (indexNumber && email && password) {
-                currentUser = { indexNumber, email };
-                users.push(currentUser);
-                if (!suggestions[indexNumber]) suggestions[indexNumber] = [];
+                users.push({ indexNumber, email, suggestions: [] });
                 alert(`Welcome, ${indexNumber}!`);
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('suggestionForm').style.display = 'block';
-                document.getElementById('suggestionHistory').style.display = 'block';
-                updateSuggestionHistory();
+                document.getElementById('userSuggestions').style.display = 'block';
             } else {
                 alert('Please fill in all fields.');
             }
         }
 
+        // Submit Suggestion
         function submitSuggestion() {
             const suggestionText = document.getElementById('suggestion').value;
             if (suggestionText) {
-                suggestions[currentUser.indexNumber].push(suggestionText);
+                const user = users[users.length - 1];
+                user.suggestions.push(suggestionText);
+                updateUserSuggestions(user.suggestions);
                 alert('Thank you for your suggestion!');
                 document.getElementById('suggestion').value = '';
-                updateSuggestionHistory();
             } else {
                 alert('Please write a suggestion.');
             }
         }
 
-        function updateSuggestionHistory() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
-            const userSuggestions = suggestions[currentUser.indexNumber];
+        function updateUserSuggestions(userSuggestions) {
+            const list = document.getElementById('userSuggestionsList');
+            list.innerHTML = '';
             if (userSuggestions.length === 0) {
-                historyList.innerHTML = '<p>No suggestions yet.</p>';
+                list.innerHTML = '<p>No suggestions yet.</p>';
             } else {
-                userSuggestions.forEach((suggestion, index) => {
-                    const item = document.createElement('div');
-                    item.classList.add('card');
-                    item.textContent = `${index + 1}. ${suggestion}`;
-                    historyList.appendChild(item);
+                userSuggestions.forEach((text, index) => {
+                    const suggestionItem = document.createElement('p');
+                    suggestionItem.textContent = `${index + 1}. ${text}`;
+                    list.appendChild(suggestionItem);
                 });
             }
         }
 
+        // Admin View
         function showAdmin() {
             const password = prompt("Enter admin password:");
             if (password === "admin123") {
                 document.getElementById('adminView').style.display = 'block';
-                displayAdminSuggestions();
+                displaySuggestions();
             } else {
                 alert("Access denied.");
             }
         }
 
-        function displayAdminSuggestions() {
+        function displaySuggestions() {
             const adminSuggestions = document.getElementById('adminSuggestions');
             adminSuggestions.innerHTML = '';
-            const allSuggestions = Object.entries(suggestions);
-
-            if (allSuggestions.length === 0) {
-                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
-            } else {
-                allSuggestions.forEach(([indexNumber, userSuggestions]) => {
-                    const userDiv = document.createElement('div');
-                    userDiv.innerHTML = `<h3>User: ${indexNumber}</h3>`;
-                    userSuggestions.forEach(suggestion => {
-                        const suggestionItem = document.createElement('div');
-                        suggestionItem.classList.add('card');
-                        suggestionItem.textContent = suggestion;
-                        userDiv.appendChild(suggestionItem);
-                    });
-                    adminSuggestions.appendChild(userDiv);
+            users.forEach(user => {
+                user.suggestions.forEach((text, index) => {
+                    const suggestionItem = document.createElement('p');
+                    suggestionItem.textContent = `${index + 
+1}. ${text} (User: ${user.indexNumber})`;
+                    adminSuggestions.appendChild(suggestionItem);
                 });
-            }
+            });
         }
     </script>
 
