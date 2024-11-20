@@ -14,8 +14,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
+        /* Smooth transitions for all */
+        * {
+            transition: all 0.3s ease;
+        }
+
+        /* Navigation Bar */
         .navbar {
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
@@ -31,19 +38,26 @@
             font-weight: bold;
         }
         .navbar a:hover {
+            color: #ffc107; /* Add hover color effect */
             text-decoration: underline;
         }
 
+        /* Pages */
         .page {
             display: none;
             padding: 20px;
             width: 100%;
             max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
         }
         .page.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
+        /* Form Container */
         .form-container, .card {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -78,21 +92,33 @@
         }
         button:hover {
             background-color: #218838;
+            transform: scale(1.05); /* Add hover scaling effect */
         }
 
+        /* Cards */
         .card {
             margin-top: 10px;
+            transform: translateY(0);
+        }
+        .card:hover {
+            transform: translateY(-5px); /* Add lift effect on hover */
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4); /* Glow on hover */
         }
 
-        .actions {
-            margin-top: 10px;
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
         }
-        .actions button {
-            margin-right: 5px;
-            background-color: #dc3545;
-        }
-        .actions button.edit {
-            background-color: #ffc107;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -107,7 +133,7 @@
     </div>
 
     <!-- Home Page -->
-    <div id="home" class="page active">
+    <div id="home" class="page active fade-in">
         <h1>Welcome to the Suggestion App</h1>
         <p>Please log in to share your suggestions.</p>
 
@@ -124,23 +150,35 @@
             <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
             <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
+    </div>
 
-        <!-- User Suggestion History -->
-        <div id="userSuggestions" class="form-container" style="display: none;">
-            <h2>Your Submitted Suggestions</h2>
-            <div id="userSuggestionsList">
-                <p>No suggestions yet.</p>
-            </div>
-        </div>
+    <!-- Events Page -->
+    <div id="events" class="page fade-in">
+        <h1>Upcoming Events</h1>
+        <div class="card">Event 1: Orientation Day - 10th Jan</div>
+        <div class="card">Event 2: Tech Summit - 15th Feb</div>
+        <div class="card">Event 3: Sports Week - 1st March</div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page fade-in">
+        <h1>Contact Us</h1>
+        <p>Email: campusadmin@example.com</p>
+        <p>Phone: +233 123 456 789</p>
+        <p>Address: Accra Technical University</p>
     </div>
 
     <!-- Admin Dashboard -->
-    <div id="admin" class="page">
+    <div id="admin" class="page fade-in">
         <h1>Admin Dashboard</h1>
         <p>Secure access required for this section.</p>
         <button onclick="showAdmin()">Login as Admin</button>
 
         <div id="adminView" style="display: none;">
+            <h2>User Details</h2>
+            <div id="userDetails">
+                <p>No users logged in yet.</p>
+            </div>
             <h2>Suggestions</h2>
             <div id="adminSuggestions">
                 <p>No suggestions yet.</p>
@@ -165,11 +203,10 @@
             const password = document.getElementById('password').value;
 
             if (indexNumber && email && password) {
-                users.push({ indexNumber, email, suggestions: [] });
+                users.push({ indexNumber, email });
                 alert(`Welcome, ${indexNumber}!`);
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('suggestionForm').style.display = 'block';
-                document.getElementById('userSuggestions').style.display = 'block';
             } else {
                 alert('Please fill in all fields.');
             }
@@ -179,9 +216,7 @@
         function submitSuggestion() {
             const suggestionText = document.getElementById('suggestion').value;
             if (suggestionText) {
-                const user = users[users.length - 1];
-                user.suggestions.push(suggestionText);
-                updateUserSuggestions(user.suggestions);
+                suggestions.push(suggestionText);
                 alert('Thank you for your suggestion!');
                 document.getElementById('suggestion').value = '';
             } else {
@@ -189,21 +224,7 @@
             }
         }
 
-        function updateUserSuggestions(userSuggestions) {
-            const list = document.getElementById('userSuggestionsList');
-            list.innerHTML = '';
-            if (userSuggestions.length === 0) {
-                list.innerHTML = '<p>No suggestions yet.</p>';
-            } else {
-                userSuggestions.forEach((text, index) => {
-                    const suggestionItem = document.createElement('p');
-                    suggestionItem.textContent = `${index + 1}. ${text}`;
-                    list.appendChild(suggestionItem);
-                });
-            }
-        }
-
-        // Admin
+        // Admin View
         function showAdmin() {
             const password = prompt("Enter admin password:");
             if (password === "admin123") {
@@ -217,33 +238,16 @@
         function displaySuggestions() {
             const adminSuggestions = document.getElementById('adminSuggestions');
             adminSuggestions.innerHTML = '';
-            users.forEach(user => {
-                user.suggestions.forEach((text, index) => {
-                    const suggestionCard = document.createElement('div');
-                    suggestionCard.classList.add('card');
-                    suggestionCard.innerHTML = `
-                        <p><strong>${user.indexNumber}:</strong> ${text}</p>
-                        <div class="actions">
-                            <button class="edit" onclick="editSuggestion(${index})">Edit</button>
-                            <button onclick="deleteSuggestion(${index})">Delete</button>
-                        </div>
-                    `;
-                    adminSuggestions.appendChild(suggestionCard);
+            if (suggestions.length === 0) {
+                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
+            } else {
+                suggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('card');
+                    suggestionItem.textContent = suggestion;
+                    adminSuggestions.appendChild(suggestionItem);
                 });
-            });
-        }
-
-        function deleteSuggestion(index) {
-            users.forEach(user => user.suggestions.splice(index, 1));
-            displaySuggestions();
-        }
-
-        function editSuggestion(index) {
-            const newText = prompt("Edit suggestion:");
-            users.forEach(user => {
-                if (user.suggestions[index]) user.suggestions[index] = newText;
-            });
-            displaySuggestions();
+            }
         }
     </script>
 
