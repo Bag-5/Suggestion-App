@@ -17,12 +17,10 @@
             overflow-x: hidden;
         }
 
-        /* Smooth transitions for all */
         * {
             transition: all 0.3s ease;
         }
 
-        /* Navigation Bar */
         .navbar {
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
@@ -38,11 +36,10 @@
             font-weight: bold;
         }
         .navbar a:hover {
-            color: #ffc107; /* Add hover color effect */
+            color: #ffc107;
             text-decoration: underline;
         }
 
-        /* Pages */
         .page {
             display: none;
             padding: 20px;
@@ -57,7 +54,6 @@
             transform: translateY(0);
         }
 
-        /* Form Container */
         .form-container, .card {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -92,20 +88,18 @@
         }
         button:hover {
             background-color: #218838;
-            transform: scale(1.05); /* Add hover scaling effect */
+            transform: scale(1.05);
         }
 
-        /* Cards */
         .card {
             margin-top: 10px;
             transform: translateY(0);
         }
         .card:hover {
-            transform: translateY(-5px); /* Add lift effect on hover */
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4); /* Glow on hover */
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
         }
 
-        /* Animations */
         .fade-in {
             animation: fadeIn 0.6s ease-in-out;
         }
@@ -124,7 +118,6 @@
 </head>
 <body>
 
-    <!-- Navigation Bar -->
     <div class="navbar">
         <a href="#" onclick="showPage('home')">Home</a>
         <a href="#" onclick="showPage('events')">Events</a>
@@ -132,12 +125,10 @@
         <a href="#" onclick="showPage('admin')">Admin Dashboard</a>
     </div>
 
-    <!-- Home Page -->
     <div id="home" class="page active fade-in">
         <h1>Welcome to the Suggestion App</h1>
         <p>Please log in to share your suggestions.</p>
 
-        <!-- Login Form -->
         <div id="loginForm" class="form-container">
             <input type="text" id="indexNumber" placeholder="Index Number" required>
             <input type="email" id="email" placeholder="Email" required>
@@ -145,14 +136,19 @@
             <button onclick="login()">Login</button>
         </div>
 
-        <!-- Suggestion Form -->
         <div id="suggestionForm" class="form-container" style="display: none;">
             <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
             <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
+
+        <div id="suggestionHistory" class="form-container" style="display: none;">
+            <h3>Your Suggestions:</h3>
+            <div id="historyList">
+                <p>No suggestions yet.</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Events Page -->
     <div id="events" class="page fade-in">
         <h1>Upcoming Events</h1>
         <div class="card">Event 1: Orientation Day - 10th Jan</div>
@@ -160,7 +156,6 @@
         <div class="card">Event 3: Sports Week - 1st March</div>
     </div>
 
-    <!-- Contact Page -->
     <div id="contact" class="page fade-in">
         <h1>Contact Us</h1>
         <p>Email: campusadmin@example.com</p>
@@ -168,7 +163,6 @@
         <p>Address: Accra Technical University</p>
     </div>
 
-    <!-- Admin Dashboard -->
     <div id="admin" class="page fade-in">
         <h1>Admin Dashboard</h1>
         <p>Secure access required for this section.</p>
@@ -188,64 +182,89 @@
 
     <script>
         const users = [];
-        const suggestions = [];
+        const suggestions = {};
+        let currentUser = null;
 
-        // Navigation
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
         }
 
-        // Login
         function login() {
             const indexNumber = document.getElementById('indexNumber').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             if (indexNumber && email && password) {
-                users.push({ indexNumber, email });
+                currentUser = { indexNumber, email };
+                users.push(currentUser);
+                if (!suggestions[indexNumber]) suggestions[indexNumber] = [];
                 alert(`Welcome, ${indexNumber}!`);
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('suggestionForm').style.display = 'block';
+                document.getElementById('suggestionHistory').style.display = 'block';
+                updateSuggestionHistory();
             } else {
                 alert('Please fill in all fields.');
             }
         }
 
-        // Submit Suggestion
         function submitSuggestion() {
             const suggestionText = document.getElementById('suggestion').value;
             if (suggestionText) {
-                suggestions.push(suggestionText);
+                suggestions[currentUser.indexNumber].push(suggestionText);
                 alert('Thank you for your suggestion!');
                 document.getElementById('suggestion').value = '';
+                updateSuggestionHistory();
             } else {
                 alert('Please write a suggestion.');
             }
         }
 
-        // Admin View
+        function updateSuggestionHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            const userSuggestions = suggestions[currentUser.indexNumber];
+            if (userSuggestions.length === 0) {
+                historyList.innerHTML = '<p>No suggestions yet.</p>';
+            } else {
+                userSuggestions.forEach((suggestion, index) => {
+                    const item = document.createElement('div');
+                    item.classList.add('card');
+                    item.textContent = `${index + 1}. ${suggestion}`;
+                    historyList.appendChild(item);
+                });
+            }
+        }
+
         function showAdmin() {
             const password = prompt("Enter admin password:");
             if (password === "admin123") {
                 document.getElementById('adminView').style.display = 'block';
-                displaySuggestions();
+                displayAdminSuggestions();
             } else {
                 alert("Access denied.");
             }
         }
 
-        function displaySuggestions() {
+        function displayAdminSuggestions() {
             const adminSuggestions = document.getElementById('adminSuggestions');
             adminSuggestions.innerHTML = '';
-            if (suggestions.length === 0) {
+            const allSuggestions = Object.entries(suggestions);
+
+            if (allSuggestions.length === 0) {
                 adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
             } else {
-                suggestions.forEach(suggestion => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('card');
-                    suggestionItem.textContent = suggestion;
-                    adminSuggestions.appendChild(suggestionItem);
+                allSuggestions.forEach(([indexNumber, userSuggestions]) => {
+                    const userDiv = document.createElement('div');
+                    userDiv.innerHTML = `<h3>User: ${indexNumber}</h3>`;
+                    userSuggestions.forEach(suggestion => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('card');
+                        suggestionItem.textContent = suggestion;
+                        userDiv.appendChild(suggestionItem);
+                    });
+                    adminSuggestions.appendChild(userDiv);
                 });
             }
         }
