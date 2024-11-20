@@ -83,6 +83,17 @@
         .card {
             margin-top: 10px;
         }
+
+        .actions {
+            margin-top: 10px;
+        }
+        .actions button {
+            margin-right: 5px;
+            background-color: #dc3545;
+        }
+        .actions button.edit {
+            background-color: #ffc107;
+        }
     </style>
 </head>
 <body>
@@ -113,22 +124,14 @@
             <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
             <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
-    </div>
 
-    <!-- Events Page -->
-    <div id="events" class="page">
-        <h1>Upcoming Events</h1>
-        <div class="card">Event 1: Orientation Day - 10th Jan</div>
-        <div class="card">Event 2: Tech Summit - 15th Feb</div>
-        <div class="card">Event 3: Sports Week - 1st March</div>
-    </div>
-
-    <!-- Contact Page -->
-    <div id="contact" class="page">
-        <h1>Contact Us</h1>
-        <p>Email: campusadmin@example.com</p>
-        <p>Phone: +233 123 456 789</p>
-        <p>Address: Accra Technical University</p>
+        <!-- User Suggestion History -->
+        <div id="userSuggestions" class="form-container" style="display: none;">
+            <h2>Your Submitted Suggestions</h2>
+            <div id="userSuggestionsList">
+                <p>No suggestions yet.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Admin Dashboard -->
@@ -138,10 +141,6 @@
         <button onclick="showAdmin()">Login as Admin</button>
 
         <div id="adminView" style="display: none;">
-            <h2>User Details</h2>
-            <div id="userDetails">
-                <p>No users logged in yet.</p>
-            </div>
             <h2>Suggestions</h2>
             <div id="adminSuggestions">
                 <p>No suggestions yet.</p>
@@ -153,23 +152,24 @@
         const users = [];
         const suggestions = [];
 
-        // Switch between pages
+        // Navigation
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
         }
 
-        // Login Function
+        // Login
         function login() {
             const indexNumber = document.getElementById('indexNumber').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             if (indexNumber && email && password) {
-                users.push({ indexNumber, email });
+                users.push({ indexNumber, email, suggestions: [] });
                 alert(`Welcome, ${indexNumber}!`);
-                document.getElementById('loginForm').style.display = 'none'; // Hide login form
-                document.getElementById('suggestionForm').style.display = 'block'; // Show suggestion form
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('suggestionForm').style.display = 'block';
+                document.getElementById('userSuggestions').style.display = 'block';
             } else {
                 alert('Please fill in all fields.');
             }
@@ -179,54 +179,71 @@
         function submitSuggestion() {
             const suggestionText = document.getElementById('suggestion').value;
             if (suggestionText) {
-                suggestions.push(suggestionText);
+                const user = users[users.length - 1];
+                user.suggestions.push(suggestionText);
+                updateUserSuggestions(user.suggestions);
                 alert('Thank you for your suggestion!');
-                document.getElementById('suggestion').value = ''; // Clear the input field
+                document.getElementById('suggestion').value = '';
             } else {
                 alert('Please write a suggestion.');
             }
         }
 
-        // Admin View
+        function updateUserSuggestions(userSuggestions) {
+            const list = document.getElementById('userSuggestionsList');
+            list.innerHTML = '';
+            if (userSuggestions.length === 0) {
+                list.innerHTML = '<p>No suggestions yet.</p>';
+            } else {
+                userSuggestions.forEach((text, index) => {
+                    const suggestionItem = document.createElement('p');
+                    suggestionItem.textContent = `${index + 1}. ${text}`;
+                    list.appendChild(suggestionItem);
+                });
+            }
+        }
+
+        // Admin
         function showAdmin() {
             const password = prompt("Enter admin password:");
             if (password === "admin123") {
                 document.getElementById('adminView').style.display = 'block';
-                displayUsers();
                 displaySuggestions();
             } else {
                 alert("Access denied.");
             }
         }
 
-        function displayUsers() {
-            const userDetails = document.getElementById('userDetails');
-            userDetails.innerHTML = '';
-            if (users.length === 0) {
-                userDetails.innerHTML = '<p>No users logged in yet.</p>';
-            } else {
-                users.forEach(user => {
-                    const userInfo = document.createElement('div');
-                    userInfo.classList.add('card');
-                    userInfo.innerHTML = `<strong>Index:</strong> ${user.indexNumber}<br><strong>Email:</strong> ${user.email}`;
-                    userDetails.appendChild(userInfo);
-                });
-            }
-        }
-
         function displaySuggestions() {
             const adminSuggestions = document.getElementById('adminSuggestions');
             adminSuggestions.innerHTML = '';
-            if (suggestions.length === 0) {
-                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
-            } else {
-                suggestions.forEach(suggestion => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('card');
-                    suggestionItem.textContent = suggestion;
-                    adminSuggestions.appendChild(suggestionItem);
+            users.forEach(user => {
+                user.suggestions.forEach((text, index) => {
+                    const suggestionCard = document.createElement('div');
+                    suggestionCard.classList.add('card');
+                    suggestionCard.innerHTML = `
+                        <p><strong>${user.indexNumber}:</strong> ${text}</p>
+                        <div class="actions">
+                            <button class="edit" onclick="editSuggestion(${index})">Edit</button>
+                            <button onclick="deleteSuggestion(${index})">Delete</button>
+                        </div>
+                    `;
+                    adminSuggestions.appendChild(suggestionCard);
                 });
-            }
+            });
+        }
+
+        function deleteSuggestion(index) {
+            users.forEach(user => user.suggestions.splice(index, 1));
+            displaySuggestions();
+        }
+
+        function editSuggestion(index) {
+            const newText = prompt("Edit suggestion:");
+            users.forEach(user => {
+                if (user.suggestions[index]) user.suggestions[index] = newText;
+            });
+            displaySuggestions();
         }
     </script>
 
