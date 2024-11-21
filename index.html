@@ -9,8 +9,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(120deg, #f5f7fa, #c3cfe2); /* Subtle gradient */
-            color: #333;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a); /* Dark background */
+            color: #f0f0f0; /* Light text for contrast */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -19,25 +19,24 @@
 
         /* Navigation Bar */
         .navbar {
-            background-color: #005f73; /* Deep teal for professionalism */
+            background-color: #121212; /* Dark navigation */
             color: white;
             display: flex;
             justify-content: space-around;
             padding: 15px;
             width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
             position: sticky;
             top: 0;
             z-index: 10;
         }
         .navbar a {
-            color: white;
+            color: #f0f0f0;
             text-decoration: none;
             font-weight: bold;
-            font-size: 16px;
         }
         .navbar a:hover {
-            color: #94d2bd; /* Soft mint hover effect */
+            color: #00b4d8; /* Soft blue hover effect */
             text-decoration: underline;
         }
 
@@ -58,10 +57,10 @@
 
         /* Form Containers */
         .form-container, .card {
-            background-color: #ffffff; /* Clean white for forms */
+            background-color: #1e1e1e; /* Dark form background */
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
             margin: 20px auto;
         }
 
@@ -70,16 +69,16 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 4px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-            color: #333;
+            border: none;
+            background-color: #333; /* Darker input field */
+            color: #f0f0f0;
         }
         input::placeholder, textarea::placeholder {
-            color: #aaa;
+            color: #888;
         }
 
         button {
-            background-color: #005f73;
+            background-color: #0077b6; /* Vibrant blue button */
             color: white;
             border: none;
             padding: 10px;
@@ -89,7 +88,7 @@
             font-weight: bold;
         }
         button:hover {
-            background-color: #0a9396;
+            background-color: #00b4d8; /* Lighter blue hover */
             transform: scale(1.05);
         }
 
@@ -97,17 +96,19 @@
         .card {
             margin-top: 10px;
             transform: translateY(0);
+            background-color: #2c2c2c; /* Slightly lighter for cards */
+            padding: 15px;
         }
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.6);
         }
 
         /* Footer */
         footer {
             margin-top: 20px;
             text-align: center;
-            color: #555;
+            color: #666;
             font-size: 14px;
         }
     </style>
@@ -185,7 +186,7 @@
     </div>
 
     <footer>
-        &copy; 2024 Suggestion App. Designed with 💖 by My Honeybyte.
+        &copy; 2024 Suggestion App. Designed with 💖 in Dark Mode.
     </footer>
 
     <script>
@@ -255,13 +256,16 @@
         }
 
         function displaySuggestions() {
-            const adminSuggestions = document.getElementById('adminSuggestions');
+            const adminSuggestions
+= document.getElementById('adminSuggestions');
             adminSuggestions.innerHTML = '';
             users.forEach(user => {
                 user.suggestions.forEach((text, index) => {
-                    const suggestionItem = document.createElement('p');
-                    suggestionItem.textContent = `${index + 
-1}. ${text} (User: ${user.indexNumber})`;
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('card');
+                    suggestionItem.innerHTML = `
+                        <p><strong>${user.indexNumber}:</strong> ${text}</p>
+                    `;
                     adminSuggestions.appendChild(suggestionItem);
                 });
             });
