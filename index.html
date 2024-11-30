@@ -17,97 +17,40 @@
             overflow-x: hidden;
         }
 
-        /* Smooth transitions for all */
-        * {
-            transition: all 0.3s ease;
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .navbar a:hover {
-            color: #ffc107;
-            text-decoration: underline;
-        }
-
-        /* Pages */
-        .page {
-            display: none;
+        .form-container {
+            margin-top: 50px;
             padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .page.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Form Container */
-        .form-container, .card {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-            margin: 20px auto;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
         }
 
-        input, textarea {
+        input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border-radius: 4px;
             border: none;
-            background-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #d6d6d6;
         }
 
         button {
             background-color: #28a745;
             color: white;
-            border: none;
             padding: 10px;
-            width: 100%;
-            cursor: pointer;
+            border: none;
             border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
             font-weight: bold;
-        }
-        button:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-
-        /* Cards */
-        .card {
-            margin-top: 10px;
-            transform: translateY(0);
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
         }
     </style>
 </head>
 <body>
-
     <!-- Navigation Bar -->
     <div class="navbar">
         <a href="#" onclick="showPage('home')">Home</a>
@@ -120,54 +63,45 @@
     <!-- Home Page -->
     <div id="home" class="page active">
         <h1>Welcome to the Suggestion App</h1>
-        <p>Please log in to share your suggestions.</p>
+        <p>Please log in below:</p>
 
-        <!-- Login Form -->
-        <div id="loginForm" class="form-container">
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button onclick="login()">Login</button>
+        <!-- User Login Form -->
+        <div class="form-container">
+            <h3>User Login</h3>
+            <input type="text" id="indexNumber" placeholder="Index Number" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="userPassword" placeholder="Password" required>
+            <button onclick="loginUser()">Login</button>
+        </div>
+
+        <!-- Admin/Super Admin Login Form -->
+        <div class="form-container">
+            <h3>Admin/Super Admin Login</h3>
+            <input type="text" id="adminUsername" placeholder="Username" required>
+            <input type="password" id="adminPassword" placeholder="Password" required>
+            <button onclick="loginAdmin()">Login</button>
         </div>
     </div>
 
-    <!-- Events Page -->
-    <div id="events" class="page">
-        <h1>Upcoming Events</h1>
-        <div class="card">Event 1: Orientation Day - 10th Jan</div>
-        <div class="card">Event 2: Tech Summit - 15th Feb</div>
-        <div class="card">Event 3: Sports Week - 1st March</div>
-    </div>
-
-    <!-- Contact Page -->
-    <div id="contact" class="page">
-        <h1>Contact Us</h1>
-        <p>Email: campusadmin@example.com</p>
-        <p>Phone: +233 123 456 789</p>
-        <p>Address: Accra Technical University</p>
-    </div>
-
-    <!-- Admin Dashboard -->
-    <div id="admin" class="page">
-        <h1>Admin Dashboard</h1>
-        <div id="adminSuggestions">
-            <p>No suggestions yet.</p>
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="page">
+        <h1>User Dashboard</h1>
+        <div id="suggestionForm" class="form-container">
+            <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
+            <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
-    </div>
 
-    <!-- Super Admin Dashboard -->
-    <div id="superAdmin" class="page">
-        <h1>Super Admin Dashboard</h1>
-        <div id="superAdminControls">
-            <button onclick="manageAdmins()">Manage Admins</button>
-        </div>
-        <div id="superAdminSuggestions">
-            <p>No suggestions yet.</p>
+        <div id="userSuggestions" class="form-container">
+            <h2>Your Suggestions</h2>
+            <div id="suggestionsList">
+                <p>No suggestions yet.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        const users = [];
-        const suggestions = [];
+        const users = []; // Store user data
+        const suggestions = []; // Store suggestions by users
         const admins = [
             { username: "admin", password: "admin123", role: "Admin" },
             { username: "superadmin", password: "super123", role: "SuperAdmin" }
@@ -179,62 +113,71 @@
             document.getElementById(pageId).classList.add('active');
         }
 
-        // Login
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        // User Login
+        function loginUser() {
+            const indexNumber = document.getElementById('indexNumber').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('userPassword').value.trim();
+
+            if (!indexNumber || !email || !password) {
+                alert("All fields are required!");
+                return;
+            }
+
+            // Save user details (temporary storage)
+            users.push({ indexNumber, email, suggestions: [] });
+            alert(`Welcome, ${indexNumber}!`);
+            document.getElementById('indexNumber').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('userPassword').value = '';
+            showPage('userDashboard');
+        }
+
+        // Admin/Super Admin Login
+        function loginAdmin() {
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+
             const admin = admins.find(a => a.username === username && a.password === password);
 
             if (admin) {
-                if (admin.role === "SuperAdmin") {
-                    showPage('superAdmin');
-                } else {
-                    showPage('admin');
-                }
+                alert(`Welcome, ${admin.role}!`);
+                showPage(admin.role === "SuperAdmin" ? 'superAdmin' : 'admin');
             } else {
-                alert("Invalid login!");
+                alert("Invalid Admin credentials!");
             }
         }
 
-        // Super Admin: Manage Admins
-        function manageAdmins() {
-            alert("Super Admin is managing admins!");
-        }
-
-        // Display Suggestions (Both Roles)
-        function displaySuggestions(role) {
-            const container = role === "SuperAdmin" ? 
-                document.getElementById('superAdminSuggestions') : 
-                document.getElementById('adminSuggestions');
-            
-            container.innerHTML = ''; // Clear suggestions
-
-            suggestions.forEach((text, index) => {
-                const suggestionCard = document.createElement('div');
-                suggestionCard.classList.add('card');
-                suggestionCard.innerHTML = `
-                    <p><strong>Suggestion ${index + 1}:</strong> ${text}</p>
-                    ${role === "SuperAdmin" ? `
-                        <button onclick="editSuggestion(${index})">Edit</button>
-                        <button onclick="deleteSuggestion(${index})">Delete</button>
-                    ` : `<button onclick="editSuggestion(${index})">Edit</button>`}
-                `;
-                container.appendChild(suggestionCard);
-            });
-        }
-
-        function editSuggestion(index) {
-            const newSuggestion = prompt("Edit your suggestion:", suggestions[index]);
-            if (newSuggestion) {
-                suggestions[index] = newSuggestion;
-                displaySuggestions("SuperAdmin");
-                displaySuggestions("Admin");
+        // Submit Suggestion
+        function submitSuggestion() {
+            const suggestionText = document.getElementById('suggestion').value.trim();
+            if (!suggestionText) {
+                alert("Suggestion cannot be empty!");
+                return;
             }
+
+            // Save suggestion for the logged-in user
+            const user = users[users.length - 1];
+            user.suggestions.push(suggestionText);
+            suggestions.push({ user: user.indexNumber, text: suggestionText });
+            alert("Suggestion submitted!");
+            document.getElementById('suggestion').value = '';
+            updateSuggestions(user.suggestions);
         }
 
-        function deleteSuggestion(index) {
-            suggestions.splice(index, 1);
-            displaySuggestions("SuperAdmin");
+        // Update Suggestions List
+        function updateSuggestions(userSuggestions) {
+            const list = document.getElementById('suggestionsList');
+            list.innerHTML = '';
+            if (userSuggestions.length === 0) {
+                list.innerHTML = '<p>No suggestions yet.</p>';
+            } else {
+                userSuggestions.forEach((text, index) => {
+                    const suggestionItem = document.createElement('p');
+                    suggestionItem.textContent = `${index + 1}. ${text}`;
+                    list.appendChild(suggestionItem);
+                });
+            }
         }
     </script>
 </body>
