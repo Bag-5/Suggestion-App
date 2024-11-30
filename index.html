@@ -104,22 +104,6 @@
             transform: translateY(-5px);
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
         }
-
-        /* Pagination controls */
-        .pagination-controls {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .pagination-controls button {
-            background-color: #3498db;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body>
@@ -130,6 +114,7 @@
         <a href="#" onclick="showPage('events')">Events</a>
         <a href="#" onclick="showPage('contact')">Contact</a>
         <a href="#" onclick="showPage('admin')">Admin Dashboard</a>
+        <a href="#" onclick="showPage('superAdmin')">Super Admin Dashboard</a>
     </div>
 
     <!-- Home Page -->
@@ -139,24 +124,9 @@
 
         <!-- Login Form -->
         <div id="loginForm" class="form-container">
-            <input type="text" id="indexNumber" placeholder="Index Number" required>
-            <input type="email" id="email" placeholder="Email" required>
+            <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
             <button onclick="login()">Login</button>
-        </div>
-
-        <!-- Suggestion Form -->
-        <div id="suggestionForm" class="form-container" style="display: none;">
-            <textarea id="suggestion" rows="4" placeholder="Write your suggestion here..."></textarea>
-            <button onclick="submitSuggestion()">Submit Suggestion</button>
-        </div>
-
-        <!-- User Suggestion History -->
-        <div id="userSuggestions" class="form-container" style="display: none;">
-            <h2>Your Submitted Suggestions</h2>
-            <div id="userSuggestionsList">
-                <p>No suggestions yet.</p>
-            </div>
         </div>
     </div>
 
@@ -179,26 +149,29 @@
     <!-- Admin Dashboard -->
     <div id="admin" class="page">
         <h1>Admin Dashboard</h1>
-        <p>Secure access required for this section.</p>
-        <button onclick="showAdmin()">Login as Admin</button>
+        <div id="adminSuggestions">
+            <p>No suggestions yet.</p>
+        </div>
+    </div>
 
-        <div id="adminView" style="display: none;">
-            <h2>User Details</h2>
-            <div id="userDetails">
-                <p>No users logged in yet.</p>
-            </div>
-            <h2>Suggestions</h2>
-            <div id="adminSuggestions">
-                <p>No suggestions yet.</p>
-            </div>
+    <!-- Super Admin Dashboard -->
+    <div id="superAdmin" class="page">
+        <h1>Super Admin Dashboard</h1>
+        <div id="superAdminControls">
+            <button onclick="manageAdmins()">Manage Admins</button>
+        </div>
+        <div id="superAdminSuggestions">
+            <p>No suggestions yet.</p>
         </div>
     </div>
 
     <script>
-        let currentPage = 1;
-        const suggestionsPerPage = 5;
         const users = [];
         const suggestions = [];
+        const admins = [
+            { username: "admin", password: "admin123", role: "Admin" },
+            { username: "superadmin", password: "super123", role: "SuperAdmin" }
+        ];
 
         // Navigation
         function showPage(pageId) {
@@ -208,132 +181,60 @@
 
         // Login
         function login() {
-            const indexNumber = document.getElementById('indexNumber').value;
-            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const admin = admins.find(a => a.username === username && a.password === password);
 
-            if (indexNumber && email && password) {
-                users.push({ indexNumber, email, suggestions: [] });
-                alert(`Welcome, ${indexNumber}!`);
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('suggestionForm').style.display = 'block';
-                document.getElementById('userSuggestions').style.display = 'block';
+            if (admin) {
+                if (admin.role === "SuperAdmin") {
+                    showPage('superAdmin');
+                } else {
+                    showPage('admin');
+                }
             } else {
-                alert('Please fill in all fields.');
+                alert("Invalid login!");
             }
         }
 
-        // Submit Suggestion
-        function submitSuggestion() {
-            const suggestionText = document.getElementById('suggestion').value;
-            if (suggestionText) {
-                const user = users[users.length - 1];
-                user.suggestions.push(suggestionText);
-                updateUserSuggestions(user.suggestions);
-                suggestions.push(suggestionText);
-                displaySuggestions();
-                alert('Thank you for your suggestion!');
-                document.getElementById('suggestion').value = '';
-            } else {
-                alert('Please write a suggestion.');
-            }
+        // Super Admin: Manage Admins
+        function manageAdmins() {
+            alert("Super Admin is managing admins!");
         }
 
-        function updateUserSuggestions(userSuggestions) {
-            const list = document.getElementById('userSuggestionsList');
-            list.innerHTML = '';
-            if (userSuggestions.length === 0) {
-                list.innerHTML = '<p>No suggestions yet.</p>';
-            } else {
-                userSuggestions.forEach((text, index) => {
-                    const suggestionItem = document.createElement('p');
-                    suggestionItem.textContent = `${index + 1}. ${text}`;
-                    list.appendChild(suggestionItem);
-                });
-            }
+        // Display Suggestions (Both Roles)
+        function displaySuggestions(role) {
+            const container = role === "SuperAdmin" ? 
+                document.getElementById('superAdminSuggestions') : 
+                document.getElementById('adminSuggestions');
+            
+            container.innerHTML = ''; // Clear suggestions
+
+            suggestions.forEach((text, index) => {
+                const suggestionCard = document.createElement('div');
+                suggestionCard.classList.add('card');
+                suggestionCard.innerHTML = `
+                    <p><strong>Suggestion ${index + 1}:</strong> ${text}</p>
+                    ${role === "SuperAdmin" ? `
+                        <button onclick="editSuggestion(${index})">Edit</button>
+                        <button onclick="deleteSuggestion(${index})">Delete</button>
+                    ` : `<button onclick="editSuggestion(${index})">Edit</button>`}
+                `;
+                container.appendChild(suggestionCard);
+            });
         }
 
-        // Admin View
-        function showAdmin() {
-            const password = prompt("Enter admin password:");
-            if (password === "admin123") {
-                document.getElementById('adminView').style.display = 'block';
-               
-                displaySuggestions();
-            } else {
-                alert("Access denied.");
-            }
-        }
-
-        // Pagination and Suggestions Display for Admin
-        function displaySuggestions() {
-            const adminSuggestions = document.getElementById('adminSuggestions');
-            adminSuggestions.innerHTML = '';
-
-            const start = (currentPage - 1) * suggestionsPerPage;
-            const end = start + suggestionsPerPage;
-
-            const currentSuggestions = suggestions.slice(start, end);
-
-            if (currentSuggestions.length === 0) {
-                adminSuggestions.innerHTML = '<p>No suggestions yet.</p>';
-            } else {
-                currentSuggestions.forEach((text, index) => {
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.classList.add('card');
-                    suggestionItem.innerHTML = `
-                        <p><strong>Suggestion ${start + index + 1}:</strong> ${text}</p>
-                        <div class="actions">
-                            <button onclick="editSuggestion(${start + index})">Edit</button>
-                            <button onclick="deleteSuggestion(${start + index})">Delete</button>
-                        </div>
-                    `;
-                    adminSuggestions.appendChild(suggestionItem);
-                });
-            }
-
-            // Pagination Controls
-            const pagination = document.createElement('div');
-            pagination.className = 'pagination-controls';
-
-            if (currentPage > 1) {
-                const prevButton = document.createElement('button');
-                prevButton.textContent = 'Previous';
-                prevButton.onclick = () => {
-                    currentPage--;
-                    displaySuggestions();
-                };
-                pagination.appendChild(prevButton);
-            }
-
-            if (end < suggestions.length) {
-                const nextButton = document.createElement('button');
-                nextButton.textContent = 'Next';
-                nextButton.onclick = () => {
-                    currentPage++;
-                    displaySuggestions();
-                };
-                pagination.appendChild(nextButton);
-            }
-
-            adminSuggestions.appendChild(pagination);
-        }
-
-        // Edit Suggestion
         function editSuggestion(index) {
             const newSuggestion = prompt("Edit your suggestion:", suggestions[index]);
-            if (newSuggestion !== null && newSuggestion.trim() !== "") {
-                suggestions[index] = newSuggestion.trim();
-                displaySuggestions();
+            if (newSuggestion) {
+                suggestions[index] = newSuggestion;
+                displaySuggestions("SuperAdmin");
+                displaySuggestions("Admin");
             }
         }
 
-        // Delete Suggestion
         function deleteSuggestion(index) {
-            if (confirm("Are you sure you want to delete this suggestion?")) {
-                suggestions.splice(index, 1);
-                displaySuggestions();
-            }
+            suggestions.splice(index, 1);
+            displaySuggestions("SuperAdmin");
         }
     </script>
 </body>
