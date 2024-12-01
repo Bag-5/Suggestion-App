@@ -1,221 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suggestion App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #007bff, #6f42c1);
-            color: #f8f9fa;
-            text-align: center;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .navbar a:hover {
-            color: #ffc107;
-        }
-
-        .page {
-            display: none;
-            padding: 20px;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .form-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            margin: 20px auto;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            margin: 10px;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggestion App</title>
+  <style>
+    /* General Styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
+    }
+    h1, h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 80%;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    #dashboard-section {
+      display: none;
+    }
+    #events-section, #suggestions-section, #contact-section {
+      margin-top: 20px;
+    }
+    #logout-btn {
+      margin-top: 20px;
+      background: #dc3545;
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="#" onclick="showPage('home')">Home</a>
-        <a href="#" onclick="showPage('events')">Events</a>
-        <a href="#" onclick="showPage('contact')">Contact</a>
-        <a href="#" onclick="showPage('adminLogin')">Admin Dashboard</a>
-        <a href="#" onclick="showPage('superAdminLogin')">Super Admin Dashboard</a>
-    </div>
+  <div class="container">
+    <!-- Home Section -->
+    <section id="home-section">
+      <h1>Welcome to the Suggestion App</h1>
+      <h2>Please log in below:</h2>
 
-    <!-- Home Page -->
-    <div id="home" class="page active">
-        <h1>Welcome to the Suggestion App</h1>
-        <p>Please log in below:</p>
+      <!-- User Login -->
+      <div class="login-form">
+        <h3>User Login</h3>
+        <form id="user-login-form">
+          <input type="text" placeholder="Index Number" id="index-number" required>
+          <input type="email" placeholder="Email" id="email" required>
+          <input type="password" placeholder="Password" id="password" required>
+          <button type="submit">Login</button>
+        </form>
+      </div>
 
-        <!-- User Login -->
-        <div class="form-container">
-            <h3>User Login</h3>
-            <input type="text" id="indexNumber" placeholder="Index Number">
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="userPassword" placeholder="Password">
-            <button onclick="loginUser()">Login</button>
-        </div>
-    </div>
+      <!-- Admin Login -->
+      <div class="login-form">
+        <h3>Admin Login</h3>
+        <form id="admin-login-form">
+          <input type="text" placeholder="Username" id="admin-username" required>
+          <input type="password" placeholder="Password" id="admin-password" required>
+          <button type="submit">Login</button>
+        </form>
+      </div>
 
-    <!-- Admin Login Page -->
-    <div id="adminLogin" class="page">
-        <h1>Admin Login</h1>
-        <div class="form-container">
-            <input type="text" id="adminUsername" placeholder="Admin Username">
-            <input type="password" id="adminPassword" placeholder="Password">
-            <button onclick="loginAdmin()">Login</button>
-        </div>
-    </div>
+      <!-- Super Admin Login -->
+      <div class="login-form">
+        <h3>Super Admin Login</h3>
+        <form id="super-admin-login-form">
+          <input type="text" placeholder="Username" id="super-admin-username" required>
+          <input type="password" placeholder="Password" id="super-admin-password" required>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </section>
 
-    <!-- Super Admin Login Page -->
-    <div id="superAdminLogin" class="page">
-        <h1>Super Admin Login</h1>
-        <div class="form-container">
-            <input type="text" id="superAdminUsername" placeholder="Super Admin Username">
-            <input type="password" id="superAdminPassword" placeholder="Password">
-            <button onclick="loginSuperAdmin()">Login</button>
-        </div>
-    </div>
+    <!-- Dashboard Section -->
+    <section id="dashboard-section">
+      <h1>Dashboard</h1>
+      <p id="welcome-message"></p>
 
-    <!-- Admin Dashboard -->
-    <div id="admin" class="page">
-        <h1>Admin Dashboard</h1>
-        <div id="adminSuggestions">
-            <p>No suggestions yet.</p>
-        </div>
-    </div>
+      <!-- Events Management -->
+      <div id="events-section">
+        <h2>Events</h2>
+        <div id="event-list"></div>
+        <form id="add-event-form">
+          <input type="text" id="event-title" placeholder="Event Title" required>
+          <button type="submit">Add Event</button>
+        </form>
+      </div>
 
-    <!-- Super Admin Dashboard -->
-    <div id="superAdmin" class="page">
-        <h1>Super Admin Dashboard</h1>
-        <button onclick="manageAdmins()">Manage Admins</button>
-        <div id="superAdminSuggestions">
-            <p>No suggestions yet.</p>
-        </div>
-    </div>
+      <!-- Suggestions -->
+      <div id="suggestions-section">
+        <h2>Suggestions</h2>
+        <div id="suggestions-list"></div>
+      </div>
 
-    <!-- Events Page -->
-    <div id="events" class="page">
-        <h1>Upcoming Events</h1>
-        <div class="card">Event 1: Orientation Day - 10th Jan</div>
-        <div class="card">Event 2: Tech Summit - 15th Feb</div>
-        <div class="card">Event 3: Sports Week - 1st March</div>
-    </div>
+      <!-- Contact Section -->
+      <div id="contact-section">
+        <h2>Contact Messages</h2>
+        <div id="contact-list"></div>
+      </div>
 
-    <!-- Contact Page -->
-    <div id="contact" class="page">
-        <h1>Contact Us</h1>
-        <p>Email: campusadmin@example.com</p>
-        <p>Phone: +233 123 456 789</p>
-        <p>Address: Accra Technical University</p>
-    </div>
+      <!-- Logout Button -->
+      <button id="logout-btn">Logout</button>
+    </section>
+  </div>
 
-    <script>
-        const users = [];
-        const suggestions = [];
-        const admins = [
-            { username: "admin", password: "admin123", role: "Admin" },
-            { username: "superadmin", password: "super123", role: "SuperAdmin" }
-        ];
+  <script>
+    // JavaScript Logic
+    const homeSection = document.getElementById("home-section");
+    const dashboardSection = document.getElementById("dashboard-section");
+    const welcomeMessage = document.getElementById("welcome-message");
+    const addEventForm = document.getElementById("add-event-form");
+    const eventList = document.getElementById("event-list");
+    const contactList = document.getElementById("contact-list");
+    const suggestionsList = document.getElementById("suggestions-list");
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
+    // Event Handlers
+    document.getElementById("user-login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      displayDashboard("User");
+    });
 
-        function loginUser() {
-            const indexNumber = document.getElementById('indexNumber').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('userPassword').value.trim();
+    document.getElementById("admin-login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      displayDashboard("Admin");
+    });
 
-            if (!indexNumber || !email || !password) {
-                alert("All fields are required!");
-                return;
-            }
+    document.getElementById("super-admin-login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      displayDashboard("Super Admin");
+    });
 
-            users.push({ indexNumber, email, suggestions: [] });
-            alert(`Welcome, ${indexNumber}!`);
-            showPage('userDashboard');
-        }
+    addEventForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const eventTitle = document.getElementById("event-title").value;
+      const newEvent = document.createElement("p");
+      newEvent.textContent = eventTitle;
+      eventList.appendChild(newEvent);
+      document.getElementById("event-title").value = "";
+    });
 
-        function loginAdmin() {
-            const username = document.getElementById('adminUsername').value.trim();
-            const password = document.getElementById('adminPassword').value.trim();
+    document.getElementById("logout-btn").addEventListener("click", function() {
+      dashboardSection.style.display = "none";
+      homeSection.style.display = "block";
+    });
 
-            const admin = admins.find(a => a.username === username && a.password === password && a.role === "Admin");
-
-            if (admin) {
-                showPage('admin');
-            } else {
-                alert("Invalid Admin credentials!");
-            }
-        }
-
-        function loginSuperAdmin() {
-            const username = document.getElementById('superAdminUsername').value.trim();
-            const password = document.getElementById('superAdminPassword').value.trim();
-
-            const superAdmin = admins.find(a => a.username === username && a.password === password && a.role === "SuperAdmin");
-
-            if (superAdmin) {
-                showPage('superAdmin');
-            } else {
-                alert("Invalid Super Admin credentials!");
-            }
-        }
-    </script>
+    // Function to Display Dashboard
+    function displayDashboard(role) {
+      homeSection.style.display = "none";
+      dashboardSection.style.display = "block";
+      welcomeMessage.textContent = `Welcome, ${role}!`;
+      if (role === "User") {
+        addEventForm.style.display = "none";
+      } else {
+        addEventForm.style.display = "block";
+      }
+    }
+  </script>
 </body>
 </html>
