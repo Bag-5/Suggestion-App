@@ -91,8 +91,8 @@
         <a href="#" onclick="showPage('home')">Home</a>
         <a href="#" onclick="showPage('events')">Events</a>
         <a href="#" onclick="showPage('contact')">Contact</a>
-        <a href="#" onclick="showPage('admin')">Admin Dashboard</a>
-        <a href="#" onclick="showPage('superAdmin')">Super Admin Dashboard</a>
+        <a href="#" onclick="showPage('adminLogin')">Admin Dashboard</a>
+        <a href="#" onclick="showPage('superAdminLogin')">Super Admin Dashboard</a>
     </div>
 
     <!-- Home Page -->
@@ -108,28 +108,25 @@
             <input type="password" id="userPassword" placeholder="Password">
             <button onclick="loginUser()">Login</button>
         </div>
+    </div>
 
-        <!-- Admin Login -->
+    <!-- Admin Login Page -->
+    <div id="adminLogin" class="page">
+        <h1>Admin Login</h1>
         <div class="form-container">
-            <h3>Admin/Super Admin Login</h3>
-            <input type="text" id="adminUsername" placeholder="Username">
+            <input type="text" id="adminUsername" placeholder="Admin Username">
             <input type="password" id="adminPassword" placeholder="Password">
             <button onclick="loginAdmin()">Login</button>
         </div>
     </div>
 
-    <!-- User Dashboard -->
-    <div id="userDashboard" class="page">
-        <h1>User Dashboard</h1>
+    <!-- Super Admin Login Page -->
+    <div id="superAdminLogin" class="page">
+        <h1>Super Admin Login</h1>
         <div class="form-container">
-            <textarea id="suggestion" placeholder="Write your suggestion here..."></textarea>
-            <button onclick="submitSuggestion()">Submit</button>
-        </div>
-        <div class="form-container">
-            <h3>Your Suggestions</h3>
-            <div id="userSuggestionsList">
-                <p>No suggestions yet.</p>
-            </div>
+            <input type="text" id="superAdminUsername" placeholder="Super Admin Username">
+            <input type="password" id="superAdminPassword" placeholder="Password">
+            <button onclick="loginSuperAdmin()">Login</button>
         </div>
     </div>
 
@@ -198,40 +195,25 @@
             const username = document.getElementById('adminUsername').value.trim();
             const password = document.getElementById('adminPassword').value.trim();
 
-            const admin = admins.find(a => a.username === username && a.password === password);
+            const admin = admins.find(a => a.username === username && a.password === password && a.role === "Admin");
 
             if (admin) {
-                showPage(admin.role === "SuperAdmin" ? 'superAdmin' : 'admin');
+                showPage('admin');
             } else {
                 alert("Invalid Admin credentials!");
             }
         }
 
-        function submitSuggestion() {
-            const suggestion = document.getElementById('suggestion').value.trim();
-            if (!suggestion) {
-                alert("Suggestion cannot be empty!");
-                return;
-            }
+        function loginSuperAdmin() {
+            const username = document.getElementById('superAdminUsername').value.trim();
+            const password = document.getElementById('superAdminPassword').value.trim();
 
-            const user = users[users.length - 1];
-            user.suggestions.push(suggestion);
-            suggestions.push(suggestion);
-            alert("Suggestion submitted!");
-            updateSuggestions(user.suggestions);
-        }
+            const superAdmin = admins.find(a => a.username === username && a.password === password && a.role === "SuperAdmin");
 
-        function updateSuggestions(userSuggestions) {
-            const list = document.getElementById('userSuggestionsList');
-            list.innerHTML = '';
-            if (userSuggestions.length === 0) {
-                list.innerHTML = '<p>No suggestions yet.</p>';
+            if (superAdmin) {
+                showPage('superAdmin');
             } else {
-                userSuggestions.forEach((text, index) => {
-                    const suggestionItem = document.createElement('p');
-                    suggestionItem.textContent = `${index + 1}. ${text}`;
-                    list.appendChild(suggestionItem);
-                });
+                alert("Invalid Super Admin credentials!");
             }
         }
     </script>
