@@ -16,13 +16,7 @@
             align-items: center;
             overflow-x: hidden;
         }
-
-        /* Smooth transitions for all */
-        * {
-            transition: all 0.3s ease;
-        }
-
-        /* Navigation Bar */
+        * { transition: all 0.3s ease; }
         .navbar {
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
@@ -30,6 +24,7 @@
             justify-content: space-around;
             padding: 15px;
             width: 100%;
+            box-shadow: 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .navbar a {
@@ -41,8 +36,6 @@
             color: #ffc107;
             text-decoration: underline;
         }
-
-        /* Pages */
         .page {
             display: none;
             padding: 20px;
@@ -56,8 +49,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Form Container */
         .form-container, .card {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -65,7 +56,6 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
             margin: 20px auto;
         }
-
         input, textarea {
             width: 100%;
             padding: 10px;
@@ -75,11 +65,9 @@
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
         }
-
         input::placeholder, textarea::placeholder {
             color: #d6d6d6;
         }
-
         button {
             background-color: #28a745;
             color: white;
@@ -94,24 +82,11 @@
             background-color: #218838;
             transform: scale(1.05);
         }
-
-        /* Cards */
-        .card {
-            margin-top: 10px;
-            transform: translateY(0);
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Pagination controls */
         .pagination-controls {
             margin-top: 20px;
             display: flex;
             justify-content: space-between;
         }
-
         .pagination-controls button {
             background-color: #3498db;
             color: white;
@@ -123,7 +98,6 @@
     </style>
 </head>
 <body>
-
     <!-- Navigation Bar -->
     <div class="navbar">
         <a href="#" onclick="showPage('home')">Home</a>
@@ -151,7 +125,7 @@
             <button onclick="submitSuggestion()">Submit Suggestion</button>
         </div>
 
-        <!-- User Suggestion History -->
+        <!-- User Suggestions -->
         <div id="userSuggestions" class="form-container" style="display: none;">
             <h2>Your Submitted Suggestions</h2>
             <div id="userSuggestionsList">
@@ -206,7 +180,7 @@
             document.getElementById(pageId).classList.add('active');
         }
 
-        // Login
+        // Login Functionality
         function login() {
             const indexNumber = document.getElementById('indexNumber').value;
             const email = document.getElementById('email').value;
@@ -258,14 +232,13 @@
             const password = prompt("Enter admin password:");
             if (password === "admin123") {
                 document.getElementById('adminView').style.display = 'block';
-               
                 displaySuggestions();
             } else {
                 alert("Access denied.");
             }
         }
 
-        // Pagination and Suggestions Display for Admin
+        // Display Suggestions for Admin (Read-Only)
         function displaySuggestions() {
             const adminSuggestions = document.getElementById('adminSuggestions');
             adminSuggestions.innerHTML = '';
@@ -283,10 +256,6 @@
                     suggestionItem.classList.add('card');
                     suggestionItem.innerHTML = `
                         <p><strong>Suggestion ${start + index + 1}:</strong> ${text}</p>
-                        <div class="actions">
-                            <button onclick="editSuggestion(${start + index})">Edit</button>
-                            <button onclick="deleteSuggestion(${start + index})">Delete</button>
-                        </div>
                     `;
                     adminSuggestions.appendChild(suggestionItem);
                 });
@@ -317,23 +286,6 @@
             }
 
             adminSuggestions.appendChild(pagination);
-        }
-
-        // Edit Suggestion
-        function editSuggestion(index) {
-            const newSuggestion = prompt("Edit your suggestion:", suggestions[index]);
-            if (newSuggestion !== null && newSuggestion.trim() !== "") {
-                suggestions[index] = newSuggestion.trim();
-                displaySuggestions();
-            }
-        }
-
-        // Delete Suggestion
-        function deleteSuggestion(index) {
-            if (confirm("Are you sure you want to delete this suggestion?")) {
-                suggestions.splice(index, 1);
-                displaySuggestions();
-            }
         }
     </script>
 </body>
